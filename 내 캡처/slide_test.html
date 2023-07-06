@@ -1,0 +1,68 @@
+<script>
+    (function($) {
+        "use strict";
+        if(Modernizr.webp){
+            $(".s511-banner__img img.retinaimg").each(function(idx,obj){
+                $(obj).attr("data-web", $(obj).data("webpweb"));
+                $(obj).attr("data-tablet", $(obj).data("webptablet"));
+                $(obj).attr("data-mobile", $(obj).data("webpmobile"));
+            });
+        }
+        var compname = "s511";
+        var $component = $("." + compname);
+
+        function slickInit() {
+            var $elem = $("." + compname + "-carousel");
+            var swipeStatus = FES.VARS.IS_HAND_DEVICE ? true : false
+            var $playPauseBtn = $("." + compname).find(".slick-autoplay");
+
+            $elem.on("init", syncTextColor);
+
+            var _slickbanner = $elem.slick({
+                arrows: false,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
+                autoplay: true,
+                pauseOnHover: false,
+                autoplaySpeed: 4e3,
+                speed:1300,
+                mobileFirst: true,
+                swipe: swipeStatus,
+                responsive: [ {
+                    breakpoint: 767,
+                    settings: {
+                        arrows: true
+                    }
+                }]
+            });
+
+            function syncTextColor(e, slick, currentSlide, nextSlide) {
+                if($elem.find('.s511-banner__item').length <= 1){
+                    $playPauseBtn.hide();
+                }
+                $playPauseBtn.on("click", function () {
+                    var $tg = $(this);
+                    if ($tg.hasClass('stop')) {
+                        $tg.removeClass('stop');
+                        $tg.addClass('play');
+                        _slickbanner.slick('slickSetOption', 'autoplay', true).slick('slickPlay')
+                    } else if ($tg.hasClass('play')) {
+                        $tg.addClass('stop');
+                        $tg.removeClass('play');
+                        _slickbanner.slick('slickSetOption', 'autoplay', false).slick('slickPause')
+                    }
+                });
+            }
+        }
+
+        function s511Init() {
+            slickInit();
+        }
+
+        if ($component.length) {
+            FES.UI.elem.$doc.on("ready", s511Init);
+        }
+    })(jQuery);
+</script>
